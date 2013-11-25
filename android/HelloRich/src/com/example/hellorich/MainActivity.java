@@ -1,6 +1,7 @@
 
 package com.example.hellorich;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -20,7 +21,7 @@ public class MainActivity extends Activity  {
 
     private PopupWindow mPopupWindow;
     private Context mContext;
-    
+    private VideoView  videoView;
     
     PopupWindow popUp;
     LinearLayout layout;
@@ -35,10 +36,15 @@ public class MainActivity extends Activity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        
         //setContentView(R.layout.activity_main);
-        
-        mContext = this.getApplicationContext();
+        setupvideo();
+ 
+    }      
+    
+    
+    public void setupPopup()
+    {
+       mContext = this.getApplicationContext();
         
         final RelativeLayout layout = new RelativeLayout(MainActivity.this);
         
@@ -103,14 +109,45 @@ public class MainActivity extends Activity  {
        TextView textView = new TextView(mContext);
        textView.setText("Timer: 30");
        ((ViewGroup) layout).addView(textView);
-
-    }      
+    }
+    
+    
+    public void setupvideo()
+    {
+        setContentView(R.layout.activity_main);  
+        
+        videoView =(VideoView)findViewById(R.id.videoView1);  
+          
+                //Creating MediaController  
+        MediaController mediaController= new MediaController(this);  
+            mediaController.setAnchorView(videoView);          
+         
+              //specify the location of media file  ol
+           Uri uri=Uri.parse("http://flurry.cachefly.net/video/20130502/5c5a892f-bef3-4b1c-a875-9b8c4f90832d.mp4");          
+                
+              //Setting MediaController and URI, then starting the videoView  
+           videoView.setMediaController(mediaController);  
+           videoView.setVideoURI(uri);          
+           videoView.requestFocus();  
+           
+           try {
+        	   
+        	   Thread.sleep(2000);
+           }
+           catch(Exception ex)
+           {
+        	   
+           }
+          
+           
+           videoView.start();  
+    }
     
     @Override
     protected void onResume()
     {
         super.onResume();
-        initFloatingWindow2();
+        //initFloatingWindow2();
     }
 
     @Override
