@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -22,12 +23,13 @@ public class MainActivity extends Activity  {
     private PopupWindow mPopupWindow;
     private Context mContext;
     private VideoView  videoView;
+    private ImageButton fCloseButton;
     
     PopupWindow popUp;
-    LinearLayout layout;
+    FrameLayout layout;
     TextView tv;
     LayoutParams params;
-    LinearLayout mainLayout;
+    FrameLayout mainLayout;
     Button but;
     boolean click = true;
   
@@ -37,7 +39,8 @@ public class MainActivity extends Activity  {
         super.onCreate(savedInstanceState);
         
         //setContentView(R.layout.activity_main);
-        setupvideo();
+        //setupvideo();
+        initFloatingWindow2();
  
     }      
     
@@ -112,6 +115,7 @@ public class MainActivity extends Activity  {
     }
     
     
+    /*
     public void setupvideo()
     {
         setContentView(R.layout.activity_main);  
@@ -142,12 +146,12 @@ public class MainActivity extends Activity  {
            
            videoView.start();  
     }
+    */
     
     @Override
     protected void onResume()
     {
         super.onResume();
-        //initFloatingWindow2();
     }
 
     @Override
@@ -158,20 +162,50 @@ public class MainActivity extends Activity  {
     }
     
     
+    private View makeCloseButtonView() {
+
+        fCloseButton = new ImageButton(this);
+        fCloseButton.setBackgroundColor(Color.TRANSPARENT);
+        fCloseButton.setImageDrawable(getResources().getDrawable(R.drawable.closex));
+        
+        //TODO: for now make sure the close button occurs all the time...
+        //fCloseButton.setVisibility(GONE);
+        fCloseButton.setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+            }
+        });
+
+        return fCloseButton;
+    }
+    
     public void initFloatingWindow2()
     {
 
             popUp = new PopupWindow(this);
-            layout = new LinearLayout(this);
-            mainLayout = new LinearLayout(this);
+            popUp.setBackgroundDrawable(null);
+            layout = new FrameLayout(this);
+            mainLayout = new FrameLayout(this);
             tv = new TextView(this);
              params = new LayoutParams(LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT);
-            layout.setOrientation(LinearLayout.VERTICAL);
-            tv.setText("Hi this is a sample text for popup window");
-            layout.addView(tv, params);
+            //layout.setOrientation(LinearLayout.VERTICAL);
+            //layout.addView(tv, params);
+            
+         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            frameParams.gravity = Gravity.END | Gravity.TOP;
+
+            // Add close button to view, but set as invisible initially
+            View v = makeCloseButtonView();
+ 
+            ((ViewGroup) layout).addView(v, frameParams);
+            
+
+            
+            
             popUp.setContentView(layout);
-            setContentView(mainLayout);
+            
             
             
             ImageButton pauseButton = new ImageButton(this);
@@ -186,6 +220,9 @@ public class MainActivity extends Activity  {
             ((ViewGroup) layout).addView(pauseButton);
             
             
+            
+            
+            setContentView(mainLayout);
  
             new Handler().postDelayed(new Runnable() {
                 
