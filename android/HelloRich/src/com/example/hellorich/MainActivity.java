@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ public class MainActivity extends Activity  {
     private ImageButton fCloseButton;
     
     PopupWindow popUp;
-    FrameLayout layout;
+    RelativeLayout layout;
     TextView tv;
     LayoutParams params;
     FrameLayout mainLayout;
@@ -182,48 +183,72 @@ public class MainActivity extends Activity  {
     public void initFloatingWindow2()
     {
 
-            popUp = new PopupWindow(this);
-            popUp.setBackgroundDrawable(null);
-            layout = new FrameLayout(this);
+           popUp = new PopupWindow(this);
+            popUp.setBackgroundDrawable(new BitmapDrawable());
+            
+            
+            layout = new RelativeLayout(this);
             mainLayout = new FrameLayout(this);
-            tv = new TextView(this);
-             params = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT);
+            
+            
+            RelativeLayout.LayoutParams tlp = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            
+            tlp.addRule(RelativeLayout.CENTER_IN_PARENT, -1);
+            
+            layout.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            
+            
+            
+ 
             //layout.setOrientation(LinearLayout.VERTICAL);
             //layout.addView(tv, params);
             
-         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            frameParams.gravity = Gravity.END | Gravity.TOP;
+            relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            relativeParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
             // Add close button to view, but set as invisible initially
             View v = makeCloseButtonView();
  
-            ((ViewGroup) layout).addView(v, frameParams);
-            
-
-            
-            
-            popUp.setContentView(layout);
-            
-            
+            ((ViewGroup) layout).addView(v, relativeParams);
+           
             
             ImageButton pauseButton = new ImageButton(this);
             pauseButton.setImageDrawable(getResources().getDrawable(R.drawable.play_button));
+            pauseButton.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT);
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
             
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, -1);
-           
-            ((ViewGroup) layout).addView(pauseButton);
-            
-            
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+              
+            ((ViewGroup) layout).addView(pauseButton, layoutParams);
             
             
+            
+
+            
+            tv = new TextView(this);
+            tv.setText("Timer :30");
+            RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+             
+            params1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params1.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+             
+            layout.addView(tv, params1);
+            
+            popUp.setContentView(layout);
+            //addContentView(layout, tlp);
+            
+             
             setContentView(mainLayout);
- 
+            
+        
             new Handler().postDelayed(new Runnable() {
                 
 
@@ -234,7 +259,7 @@ public class MainActivity extends Activity  {
                     
                 }
             }, 100L);
-        
+          
     }
     
     
